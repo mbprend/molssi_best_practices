@@ -5,6 +5,12 @@ functions.py
 Handles the primary functions
 """
 
+import numpy as np
+import matplotlib.pyplot as plt
+
+# noinspection PyInterpreter
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401
+
 
 def canvas(with_attribution=True):
     """
@@ -33,16 +39,30 @@ if __name__ == "__main__":
     # Do something if this file is invoked on its own
     print(canvas())
 
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-
-# noinspection PyInterpreter
-from mpl_toolkits.mplot3d import Axes3D
-
 
 def calculate_distance(rA, rB):
-    # This function calculates the distance between two points given as numpy arrays.
+    """
+    Calculate the distance between two points.
+
+    This is where an extended description will go
+
+    Parameters
+    ----------
+    rA, rB : np.ndarray
+        The coordinates of each point.
+
+    Returns
+    -------
+    dist : float
+        The distance between two points.
+
+    Examples
+    --------
+    >>> r1 = np.array([0, 0, 0])
+    >>> r2 = np.array([0, 0.1, 0])
+    >>> calculate_distance(r1, r2)
+    0.1
+    """
     d = rA - rB
     dist = np.linalg.norm(d)
     return dist
