@@ -209,8 +209,24 @@ def bond_histogram(bond_list, save_location=None, dpi=300, graph_min=0, graph_ma
 
 
 def build_bond_list(coordinates, max_bond=1.5, min_bond=0):
+    """
+    Find the bonds in a molecule (set of coordinates) based on distance criteria.
 
-    # Find the bonds in a molecule (set of coordinates) based on distance criteria.
+    Parameters
+    ----------
+    coordinates
+    max_bond
+    min_bond
+
+    Returns
+    -------
+    bonds : dict
+
+    """
+
+    if min_bond < 0:
+        raise ValueError("The minimum bond length cannot be less than zero")
+
     bonds = {}
     num_atoms = len(coordinates)
 
@@ -219,7 +235,6 @@ def build_bond_list(coordinates, max_bond=1.5, min_bond=0):
             distance = calculate_distance(coordinates[atom1], coordinates[atom2])
             if distance > min_bond and distance < max_bond:
                 bonds[(atom1, atom2)] = distance
-
     return bonds
 
 
@@ -234,3 +249,61 @@ atom_colors = {
     "Br": "#F4A460",
     "S": "yellow",
 }
+
+
+def calculate_molecular_mass(symbols):
+    """Calculate the mass of a molecule.
+
+    Parameters
+    ----------
+    symbols : list
+        A list of elements.
+
+    Returns
+    -------
+    mass : float
+        The mass of the molecule
+    """
+
+    mass = 0
+    for atom in symbols:
+        mass += atomic_weights[atom]
+
+    return mass
+
+
+def calculate_center_of_mass(symbols, coordinates):
+    """Calculate the center of mass of a molecule.
+
+    The center of mass is weighted by each atom's weight.
+
+    Parameters
+    ----------
+    symbols : list
+        A list of elements for the molecule
+    coordinates : np.ndarray
+        The coordinates of the molecule.
+
+    Returns
+    -------
+    center_of_mass: np.ndarray
+        The center of mass of the molecule.
+
+    Notes
+    -----
+    The center of mass is calculated with the formula
+
+    .. math:: \\vec{R}=\\frac{1}{M} \\sum_{i=1}^{n} m_{i}\\vec{r_{}i}
+
+    """
+
+    total_mass = calculate_molecular_mass(symbols)
+
+    mass_array = np.zeros([len(symbols), 1])
+
+    for i in range(len(symbols)):
+        mass_array[i] = atomic_weights[symbols[i]]
+
+    center_of_mass = sum(coordinates * mass_array) / total_mass
+
+    return center_of_mass
